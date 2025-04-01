@@ -1,0 +1,7 @@
+**/node_modules/
+**/dist/
+**/dist-types/
+**/dist-scalprum/
+**dist-dynamic/
+**/coverage/
+.npmrc
