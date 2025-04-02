@@ -24,6 +24,7 @@
     "lint:check": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
+    "clean-build": "rm -Rf dist dist-dynamic dist-scalprum",
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place",
     "export-dynamic:clean": "run export-dynamic --clean"
   },

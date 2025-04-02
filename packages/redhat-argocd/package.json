@@ -1,6 +1,6 @@
 {
-  "name": "rhtap-plugins-plugin-tekton",
-  "version": "3.21.1",
+  "name": "rhtap-plugins-plugin-redhat-argocd",
+  "version": "1.17.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -12,10 +12,21 @@
   "backstage": {
     "role": "frontend-plugin",
     "supported-versions": "1.36.1",
-    "pluginId": "tekton",
+    "pluginId": "redhat-argocd",
     "pluginPackages": [
-      "backstage-community-plugin-tekton"
+      "backstage-community-plugin-redhat-argocd"
     ]
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "package.json": [
+        "package.json"
+      ]
+    }
   },
   "sideEffects": false,
   "scripts": {
@@ -29,7 +40,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-tekton": "3.21.1",
+    "@backstage-community/plugin-redhat-argocd": "1.17.0",
     "@mui/material": "5.17.1"
   },
   "devDependencies": {
@@ -42,7 +53,7 @@
     "dist-scalprum"
   ],
   "scalprum": {
-    "name": "rhtap-plugins.tekton",
+    "name": "rhtap-plugins.redhat-argocd",
     "exposedModules": {
       "PluginRoot": "./src/index.ts"
     }
@@ -50,7 +61,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/caugello/rhtap-plugins",
-    "directory": "packages/tekton"
+    "directory": "packages/redhat-argocd"
   },
   "author": "Red Hat",
   "homepage": "https://red.ht/rhdh",
