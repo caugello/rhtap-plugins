@@ -25,20 +25,24 @@ RUN \
     corepack use 'yarn@4' && \
     yarn --version && \
     mkdir -p $PLUGINS_OUTPUT && \
-    dnf -y install zlib-devel brotli-devel jq
+    dnf -y install jq
 
-RUN bash utils/build.sh
+RUN bash utils/build.sh && \
+    mkdir -p $PLUGINS_OUTPUT/licenses && \
+    cp -R $PLUGINS_WORKSPACE/LICENSE.TXT $PLUGINS_OUTPUT/licenses
+
+USER 1001
 
 FROM scratch
 
-LABEL name="Backstage community plugins" \
+LABEL name="RHTAP backstage plugins" \
       com.redhat.component="rhtap" \
       vendor="Red Hat, Inc." \
       version="1" \
       release="5" \
-      description="Collection of Backstage community plugins" \
-      io.k8s.description="Collection of Backstage community plugins" \
+      description="Artifact with Backstage plugins for RHTAP" \
+      summary="Artifact with Backstage plugins for RHTAP" \
       url="https://github.com/redhat-appstudio/backstage-community-plugins" \
       distribution-scope="public"
 
-COPY --from=builder $PLUGINS_OUTPUT /
+COPY --chown=1001:1001 --from=builder /plugin-output /
