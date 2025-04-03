@@ -7,18 +7,30 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*"
+      "plugins/*"
     ]
   },
+  "scripts": {
+    "install-immutable": "turbo run install-immutable",
+    "tsc": "turbo run tsc",
+    "build": "turbo run build",
+    "clean-build": "turbo run clean-build",
+    "export-dynamic": "turbo run export-dynamic",
+    "package-dynamic": "turbo run package-dynamic"
+  },
+  "packageManager": "yarn@1.22.22",
   "devDependencies": {
     "@backstage/cli": "0.30.0",
-    "typescript": "5.8.2",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0",
-    "react-router-dom": "^6.0.0"
+    "react-router-dom": "^6.0.0",
+    "typescript": "5.8.2"
   },
   "resolutions": {
     "@types/react": "18.3.20",
     "@types/react-dom": "18.3.5"
+  },
+  "dependencies": {
+    "turbo": "^2.4.4"
   }
 }

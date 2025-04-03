@@ -4,19 +4,19 @@ WORKDIR /plugin-workspace
 
 ENV PLUGINS_OUTPUT="/plugin-output"
 ENV PLUGINS_WORKSPACE="/plugin-workspace"
+ENV TURBO_TELEMETRY_DISABLED=1
 
 USER root
 
 COPY . .
 
-# Remove local settings
-RUN rm -f .npmrc
+# Remove local settings and node_modules
+RUN rm -f .npmrc && \
+    find . -type d \( -name node_modules -o -name dist -o -name dist-dynamic -o -name dist-scalprum -o -name dist-plugin \) -exec rm -rf {} +
 
 # The recommended way of using yarn is via corepack. However, corepack is not included in the UBI
 # image. Below we install corepack so we can install yarn.
 # https://github.com/nodejs/corepack?tab=readme-ov-file#default-installs
-# RPMs required for isolated-vm build
-# https://github.com/laverdet/isolated-vm?tab=readme-ov-file#requirements
 RUN \
     node --version && \
     npm install -g corepack && \
@@ -25,20 +25,33 @@ RUN \
     corepack use 'yarn@4' && \
     yarn --version && \
     mkdir -p $PLUGINS_OUTPUT && \
-    dnf -y install zlib-devel brotli-devel jq
+    dnf -y install jq
 
-RUN bash utils/build.sh
+
+RUN yarn package-dynamic
+
+RUN for plugin in $(ls ${PLUGINS_WORKSPACE}/plugins); do \
+     mv "${PLUGINS_WORKSPACE}/plugins/${plugin}/dist-plugin/index.json" "${PLUGINS_WORKSPACE}/plugins/${plugin}/dist-plugin/${plugin}-index.json" && \
+     cp -R ${PLUGINS_WORKSPACE}/plugins/${plugin}/dist-plugin/* ${PLUGINS_OUTPUT}; \
+   done && \
+   jq -c -s 'flatten' ${PLUGINS_OUTPUT}/*-index.json > ${PLUGINS_OUTPUT}/index.json && \
+   rm -f ${PLUGINS_OUTPUT}/*-index.json
+
+RUN mkdir -p $PLUGINS_OUTPUT/licenses && \
+    cp $PLUGINS_WORKSPACE/LICENSE.TXT $PLUGINS_OUTPUT/licenses
 
 FROM scratch
 
-LABEL name="Backstage community plugins" \
+LABEL name="RHTAP backstage plugins" \
       com.redhat.component="rhtap" \
       vendor="Red Hat, Inc." \
       version="1" \
       release="5" \
-      description="Collection of Backstage community plugins" \
-      io.k8s.description="Collection of Backstage community plugins" \
+      description="Artifact with Backstage plugins for RHTAP" \
+      summary="Artifact with Backstage plugins for RHTAP" \
       url="https://github.com/redhat-appstudio/backstage-community-plugins" \
       distribution-scope="public"
 
-COPY --from=builder $PLUGINS_OUTPUT /
+COPY --chown=1001:1001 --from=builder /plugin-output /
+
+USER 1001
