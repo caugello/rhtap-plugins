@@ -24,9 +24,10 @@
     "lint:check": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
-    "clean-build": "rm -Rf dist dist-dynamic dist-scalprum",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place",
-    "export-dynamic:clean": "run export-dynamic --clean"
+    "clean-build": "rm -rf dist dist-dynamic dist-scalprum dist-plugin",
+    "install-immutable": "yarn install --immutable",
+    "export-dynamic": "janus-cli package export-dynamic-plugin --clean",
+    "package-dynamic": "janus-cli package package-dynamic-plugins --export-to dist-plugin"
   },
   "dependencies": {
     "@backstage-community/plugin-tekton": "3.22.1",
@@ -34,8 +35,8 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.30.0",
-    "typescript": "5.8.2",
-    "@janus-idp/cli": "3.3.1"
+    "@janus-idp/cli": "3.3.1",
+    "typescript": "5.8.2"
   },
   "files": [
     "dist",

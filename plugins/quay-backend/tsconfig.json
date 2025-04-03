@@ -3,7 +3,7 @@
   "include": ["src", "dev", "migrations"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "outDir": "../../dist-types/packages/quay",
+    "outDir": "../../dist-types/plugins/quay-backend",
     "rootDir": "."
   }
 }

@@ -3,7 +3,7 @@
   "include": ["src", "dev", "migrations"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "outDir": "../../dist-types/packages/multi-source-security-viewer",
+    "outDir": "../../dist-types/plugins/quay",
     "rootDir": "."
   }
 }
