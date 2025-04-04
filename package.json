@@ -14,23 +14,14 @@
     "install-immutable": "turbo run install-immutable",
     "tsc": "turbo run tsc",
     "build": "turbo run build",
-    "clean-build": "turbo run clean-build",
-    "export-dynamic": "turbo run export-dynamic",
-    "package-dynamic": "turbo run package-dynamic"
+    "plugins:prepare": "rimraf dist-plugin && turbo run clean-build --filter='./plugins/**'",
+    "plugins:build": "turbo run package-dynamic --filter='./plugins/**'"
   },
   "packageManager": "yarn@1.22.22",
   "devDependencies": {
     "@backstage/cli": "0.30.0",
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0",
-    "react-router-dom": "^6.0.0",
+    "rimraf": "6.0.1",
+    "turbo": "^2.4.4",
     "typescript": "5.8.2"
-  },
-  "resolutions": {
-    "@types/react": "18.3.20",
-    "@types/react-dom": "18.3.5"
-  },
-  "dependencies": {
-    "turbo": "^2.4.4"
   }
 }
