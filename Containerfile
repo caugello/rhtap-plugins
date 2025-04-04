@@ -10,9 +10,8 @@ USER root
 
 COPY . .
 
-# Remove local settings and node_modules
-RUN rm -f .npmrc && \
-    find . -type d \( -name node_modules -o -name dist -o -name dist-dynamic -o -name dist-scalprum -o -name dist-plugin \) -exec rm -rf {} +
+# Remove local settings
+RUN rm -f .npmrc
 
 # The recommended way of using yarn is via corepack. However, corepack is not included in the UBI
 # image. Below we install corepack so we can install yarn.
@@ -28,7 +27,8 @@ RUN \
     dnf -y install jq
 
 
-RUN yarn package-dynamic
+RUN yarn plugins:prepare && \
+    yarn plugins:build
 
 RUN for plugin in $(ls ${PLUGINS_WORKSPACE}/plugins); do \
      mv "${PLUGINS_WORKSPACE}/plugins/${plugin}/dist-plugin/index.json" "${PLUGINS_WORKSPACE}/plugins/${plugin}/dist-plugin/${plugin}-index.json" && \
