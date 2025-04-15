@@ -5,30 +5,29 @@ WORKDIR /plugin-workspace
 ENV PLUGINS_OUTPUT="/plugin-output"
 ENV PLUGINS_WORKSPACE="/plugin-workspace"
 ENV TURBO_TELEMETRY_DISABLED=1
+ENV YARN_ENABLE_OFFLINE_MODE=0
 
 USER root
 
 COPY . .
 
-# Remove local settings
-RUN rm -f .npmrc
+RUN ln -s $PLUGINS_WORKSPACE/.yarn/releases/yarn-4.8.1.cjs /usr/local/bin/yarn
 
 # The recommended way of using yarn is via corepack. However, corepack is not included in the UBI
 # image. Below we install corepack so we can install yarn.
 # https://github.com/nodejs/corepack?tab=readme-ov-file#default-installs
 RUN \
     node --version && \
-    npm install -g corepack && \
-    corepack --version && \
-    corepack enable yarn && \
-    corepack use 'yarn@4' && \
     yarn --version && \
-    mkdir -p $PLUGINS_OUTPUT && \
-    dnf -y install jq
+    dnf install -y jq && \
+    yarn install --inline-builds && \
+    mkdir -p $PLUGINS_OUTPUT
 
-
-RUN yarn plugins:prepare && \
-    yarn plugins:build
+RUN yarn plugins:prepare
+RUN yarn plugins:build:frontend
+RUN yarn plugins:build:backend
+RUN yarn plugins:build:backend:postinstall
+RUN yarn plugins:package
 
 RUN for plugin in $(ls ${PLUGINS_WORKSPACE}/plugins); do \
      mv "${PLUGINS_WORKSPACE}/plugins/${plugin}/dist-plugin/index.json" "${PLUGINS_WORKSPACE}/plugins/${plugin}/dist-plugin/${plugin}-index.json" && \
